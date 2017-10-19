@@ -39,7 +39,7 @@ public class CentralServer {
                     + "\n 1.-SI \n 2.-NO ");
             String input = scanner.nextLine();
             //Si es aceptado, entregarle los datos del multicast y el ip-consultas
-            if (input == "1"){
+            if (Objects.equals("1", input)){
 
             }
             mySocket.close( );
