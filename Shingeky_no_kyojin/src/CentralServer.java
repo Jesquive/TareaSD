@@ -27,6 +27,12 @@ public class CentralServer {
             Distritos.get(Distritos.size()-1).add("5600");
             Distritos.get(Distritos.size()-1).add("10.10.2.135");
             Distritos.get(Distritos.size()-1).add("5700");
+            Distritos.add(new ArrayList<String>());
+            Distritos.get(Distritos.size()-1).add("Hot");
+            Distritos.get(Distritos.size()-1).add("224.0.0.8");
+            Distritos.get(Distritos.size()-1).add("5601");
+            Distritos.get(Distritos.size()-1).add("10.10.2.135");
+            Distritos.get(Distritos.size()-1).add("5700");
             while(true) {
                 for(int i = 0; i<Conectados.size();i++){
                     System.out.println("IP: "+ Conectados.get(i).get(0)+" en distrito: "+ Conectados.get(i).get(1));
@@ -48,19 +54,14 @@ public class CentralServer {
                         + "\n 1.-SI \n 2.-NO ");
                 String input = scanner.nextLine();
                 //Si es aceptado, entregarle los datos del multicast y el ip-consultas
-                System.out.println(input);
-                System.out.println(datagram.getAddress());
-                System.out.println(datagram.getPort());
                 if ("1".equals(input)) {
                     Conectados.add(new ArrayList<String>());
                     Conectados.get(Conectados.size() - 1).add(datagram.getAddress().toString());
                     Conectados.get(Conectados.size() - 1).add(message);
-                    System.out.println("hola");
                     for (int i = 0; i < Distritos.size(); i++) {
                         if (Objects.equals(message, Distritos.get(i).get(0))) {
                             ByteArrayOutputStream baot = new ByteArrayOutputStream(1000);
                             DataOutput Do = new DataOutputStream(baot);
-                            System.out.println(Distritos.get(i).get(0));
                             Do.writeUTF(Distritos.get(i).get(0));
                             Do.writeUTF(Distritos.get(i).get(1));
                             Do.writeUTF(Distritos.get(i).get(2));
@@ -76,6 +77,14 @@ public class CentralServer {
                         }
                     }
 
+                }else{
+                    ByteArrayOutputStream baot = new ByteArrayOutputStream(1000);
+                    DataOutput Do = new DataOutputStream(baot);
+                    Do.writeUTF("Rechazado");
+
+                    DatagramPacket respuesta = new DatagramPacket(baot.toByteArray(), baot.size(), datagram.getAddress(), datagram.getPort());
+                    // Enviamos la respuesta, que es un eco
+                    mySocket.send(respuesta);
                 }
                 mySocket.close();
             }
