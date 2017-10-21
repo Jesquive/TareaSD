@@ -117,10 +117,14 @@ public class Client {
 
     public static void conectarMulticast(String name, String ip, String port) {
         try {
+
             InetAddress grupoM = InetAddress.getByName(ip);
             MulticastSocket socket = new MulticastSocket(Integer.parseInt(port));
+            //socket.joinGroup(grupoM);
+
+            new Thread(new McastReceiver(Integer.parseInt(port),grupoM),"McastReceiver").start();
+
             System.out.println("[Cliente]: uniendose a distrito" + name);
-            socket.joinGroup(grupoM);
             System.out.println("[Cliente]: Bienvenido a Atack On Distribuidos!!-Distrito: " + name);
 
             while (true) {
@@ -151,7 +155,7 @@ public class Client {
                 }
 
             }
-            socket.leaveGroup(grupoM);
+           //socket.leaveGroup(grupoM);
 
 
         } catch (SocketException e) {

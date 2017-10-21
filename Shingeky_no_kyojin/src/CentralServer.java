@@ -24,13 +24,13 @@ public class CentralServer {
             Distritos.add(new ArrayList<String>());
             Distritos.get(Distritos.size()-1).add("Frost");
             Distritos.get(Distritos.size()-1).add("224.0.0.7");
-            Distritos.get(Distritos.size()-1).add("5600");
+            Distritos.get(Distritos.size()-1).add("5400");
             Distritos.get(Distritos.size()-1).add("10.10.2.135");
             Distritos.get(Distritos.size()-1).add("5700");
             Distritos.add(new ArrayList<String>());
             Distritos.get(Distritos.size()-1).add("Hot");
             Distritos.get(Distritos.size()-1).add("224.0.0.8");
-            Distritos.get(Distritos.size()-1).add("5601");
+            Distritos.get(Distritos.size()-1).add("5401");
             Distritos.get(Distritos.size()-1).add("10.10.2.135");
             Distritos.get(Distritos.size()-1).add("5700");
             while(true) {
@@ -38,7 +38,7 @@ public class CentralServer {
                     System.out.println("IP: "+ Conectados.get(i).get(0)+" en distrito: "+ Conectados.get(i).get(1));
                 }
 
-                DatagramSocket mySocket = new DatagramSocket(8001);
+                DatagramSocket mySocket = new DatagramSocket(5002);
                 byte[] buffer = new byte[10];
                 ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
                 DataInput Di = new DataInputStream(bais);

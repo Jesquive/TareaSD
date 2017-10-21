@@ -31,6 +31,7 @@ public class District {
   //Crear un multicast para este distrito
   public void CreateMulticast(){
       try{
+          //Crear el servidor MC
           InetAddress grupo = this.IpMC;
           MulticastSocket socket = new MulticastSocket(this.PMC);
           socket.joinGroup(grupo);
@@ -38,9 +39,13 @@ public class District {
 
       }catch (SocketException e){
             System.out.println("Socket: " + e.getMessage());
-        }catch (IOException e){
+      }catch (IOException e){
             System.out.println("IO: " + e.getMessage());
-        }
+      }
+
+      //Crear thread que enviara actualizaciones cada 1 minuto de los titanes del distrito
+      new Thread(new McastRepeater(this.PMC,this.IpMC),"McastRepeater: Distrito"+this.Name).start();
+
   }
 
   //Crear Servidor de peticiones para este distrito
