@@ -16,7 +16,7 @@ public class District {
 
   //
   ArrayList<Titan> Titanes;
-
+  McastRepeater ActualizadorTitanes;
 
   //Constructor de Distritos entregando cada dato
   public District(String Name, InetAddress IpMC, int PMC, InetAddress IpPeticiones, int PPeticiones){
@@ -26,6 +26,7 @@ public class District {
     this. IpPeticiones = IpPeticiones;
     this.PPeticiones = PPeticiones;
     this.Titanes = new ArrayList<Titan>();
+    this.ActualizadorTitanes = new McastRepeater(this.PMC,this.IpMC,this.Titanes);
   }
 
   //Crear un multicast para este distrito
@@ -44,7 +45,7 @@ public class District {
       }
 
       //Crear thread que enviara actualizaciones cada 1 minuto de los titanes del distrito
-      new Thread(new McastRepeater(this.PMC,this.IpMC),"McastRepeater: Distrito"+this.Name).start();
+      new Thread(this.ActualizadorTitanes,"McastRepeater: Distrito"+this.Name).start();
 
   }
 
@@ -64,6 +65,7 @@ public class District {
   public void NewTitan(int IdLastCreatedTitan,String Name,String Tipo){
     Titan Titan = new Titan(IdLastCreatedTitan,Name,this.Name,Tipo);
     Titanes.add(Titan);
+    ActualizadorTitanes.SetTitanList(this.Titanes);
     System.out.println("[Distrito: " + this.Name+" ] Se ha publicado el titan: "+Name);
     System.out.println("****************");
     System.out.println("Id: "+ IdLastCreatedTitan);
@@ -71,6 +73,43 @@ public class District {
     System.out.println("Tipo: "+ Tipo);
     System.out.println("Distrito: "+ this.Name);
     System.out.println("**************** \n");
+
+
+    //FUNCION en prueba
+    SendMCNewTitan(IdLastCreatedTitan,Name,Tipo);
+  }
+    //REVISAR SI EL TEMPSOCK ENVIA
+  public void SendMCNewTitan(int id,String TitanName,String TitanType){
+
+      try {
+          DatagramPacket packet;
+          DatagramSocket TempSock = ActualizadorTitanes.GetMCsocket();
+
+          ByteArrayOutputStream baot = new ByteArrayOutputStream();
+          DataOutput Do = new DataOutputStream(baot);
+
+          Do.writeInt(-300);
+          Do.writeInt(id);
+          Do.writeUTF(TitanName);
+          Do.writeUTF(this.Name);
+          Do.writeUTF(TitanType);
+
+          // Create a datagram packet and send it
+          packet = new DatagramPacket(baot.toByteArray(),
+                  baot.size(),
+                  this.IpMC,
+                  this.PMC);
+
+          // send the packet
+          TempSock.send(packet);
+
+      } catch (IOException ioe) {
+          System.out.println("error sending multicast");
+          ioe.printStackTrace(); System.exit(1);
+
+      }
+
+
   }
 
   //Capturar Titan

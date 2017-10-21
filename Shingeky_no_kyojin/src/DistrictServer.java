@@ -72,6 +72,8 @@ public class DistrictServer {
     }
   }
 
+
+
   public static void InstantiateDistrict(){
     scanner = new Scanner(System.in);
     try {

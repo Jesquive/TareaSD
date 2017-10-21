@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class McastReceiver implements Runnable {
 
@@ -20,6 +21,7 @@ public class McastReceiver implements Runnable {
         }
 
     }
+
 
     @Override
     public void run() {
@@ -45,6 +47,8 @@ public class McastReceiver implements Runnable {
         //Esperar a que llegue algo
         while (true) {
             try {
+                //ArrayList<Titan> Titanes= new ArrayList<Titan>();
+
 
                 //Crear Datagrama UDP
                 byte[] buf = new byte[1000];
@@ -57,29 +61,66 @@ public class McastReceiver implements Runnable {
                 //Crear el inputstream con los datos de llegada
                 ByteArrayInputStream bistream =
                         new ByteArrayInputStream(packet.getData());
+                DataInput Di = new DataInputStream(bistream);
 
+                //Primer input me dice cuantos titanes a listar
+                int iterator = Di.readInt();
+
+                //SI RECIBE -300, SIGNIFICA QUE ES UN DATAGRAMA SOLO CON 1 TITAN QUE ES NUEVO,
+                //POR LO QUE VUELVO EL ITERADOR A 1 PARA QUE LO IMPRIMA Y AGREGO MENSAJE DE NUEVO
+                if(iterator == -300) {
+                    System.out.println("\nNUEVO TITAN");
+                    iterator = 1;
+                } else if (iterator == 0){
+                    System.out.println("No hay titanes en el Distrito");
+                }
+
+                //IMPRIME TODOS LOS TITANES EN DATAGRAMA
+                for (int i = 0; i < iterator; i++) {
+                    System.out.println("****************");
+                    System.out.println("Id: "+Di.readInt());
+                    System.out.println("Nombre: "+Di.readUTF());
+                    System.out.println("Distrito: "+Di.readUTF());
+                    System.out.println("Tipo: "+Di.readUTF());
+                    System.out.println("****************");
+                }
                 //El programa solo recibia 1
-                ObjectInputStream ois = new ObjectInputStream(bistream);
-                Integer value = (Integer) ois.readObject();
+                /*ObjectInputStream ois = new ObjectInputStream(bistream);
+                Titanes = (ArrayList<Titan>) ois.readObject();
 
                 //Ignorar paquetes que salgan de mi
                 if (!(packet.getAddress().equals(this.localHost))) {
-                    System.out.println("Received multicast packet: "+
-                            value.intValue() + " from: " + packet.getAddress());
-                }
+                    if(Titanes.size() != 0) {
+                        System.out.println("[Cliente:] Titanes del Distrito");
+                        Titan[] TempArray = (Titan[]) Titanes.toArray(new Titan[0]);
+                        for (Titan titan : TempArray) {
+                            System.out.println("****************");
+                            System.out.println("TITAN");
+                            System.out.println("Nombre: "+titan.Name);
+                            System.out.println("Id: "+titan.Id);
+                            System.out.println("****************");
 
-                ois.close();
+                        }
+                    } else {
+                        System.out.println("[Cliente:] No hay titanes ");
+
+                    }*/
+
+
+                //ois.close();
                 bistream.close();
 
             } catch(IOException ioe) {
                 System.out.println("Trouble reading multicast message");
                 ioe.printStackTrace();  System.exit(1);
-            } catch (ClassNotFoundException cnfe) {
+            } /*catch (ClassNotFoundException cnfe) {
                 System.out.println("Class missing while reading mcast packet");
                 cnfe.printStackTrace(); System.exit(1);
-            }
+            }*/
 
         }
 
     }
+
+
 }
