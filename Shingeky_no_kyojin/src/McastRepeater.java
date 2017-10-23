@@ -59,8 +59,6 @@ public class McastRepeater implements Runnable {
                 ByteArrayOutputStream baot = new ByteArrayOutputStream();
                 DataOutput Do = new DataOutputStream(baot);
 
-
-
                 //Enviar cuantos titanes se escrbira
                 int iterator = this.TitanesS.size();
                 Do.writeInt(iterator);

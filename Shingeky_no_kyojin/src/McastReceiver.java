@@ -7,7 +7,7 @@ public class McastReceiver implements Runnable {
     int mcastPort = 0;
     InetAddress mcastAddr = null;
     InetAddress localHost = null;
-
+    Boolean cerrarThread = true;
     //Asigna las variables necesarias para el MC
     public  McastReceiver(int port,InetAddress addr){
         this.mcastPort = port;
@@ -45,11 +45,9 @@ public class McastReceiver implements Runnable {
         System.out.println("Multicast receiver set up ");
 
         //Esperar a que llegue algo
-        while (true) {
+        while (cerrarThread) {
             try {
                 //ArrayList<Titan> Titanes= new ArrayList<Titan>();
-
-
                 //Crear Datagrama UDP
                 byte[] buf = new byte[1000];
                 packet = new DatagramPacket(buf,buf.length);
@@ -109,6 +107,9 @@ public class McastReceiver implements Runnable {
 
                 //ois.close();
                 bistream.close();
+                mSocket.close();
+
+
 
             } catch(IOException ioe) {
                 System.out.println("Trouble reading multicast message");
@@ -120,6 +121,9 @@ public class McastReceiver implements Runnable {
 
         }
 
+    }
+    public void terminar(){
+        this.cerrarThread = false;
     }
 
 

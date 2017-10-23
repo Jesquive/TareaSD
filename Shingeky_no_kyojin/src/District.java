@@ -52,8 +52,9 @@ public class District {
   //Crear Servidor de peticiones para este distrito
   public void PetitionServer(){
       try {
-          InetAddress ip = this.IpPeticiones;
           DatagramSocket mySocket = new DatagramSocket(this.PPeticiones);
+          SDReceivers th = new SDReceivers(mySocket);
+          new Thread(th,"SDReceiver");
       }catch (Exception ex) {
           ex.printStackTrace( );
       }
@@ -146,11 +147,11 @@ public class District {
       System.out.println("[Distrito: " + this.Name+" ] Titanes en el Distrito: ");
       Titan[] TempArray = (Titan[]) Titanes.toArray(new Titan[0]);
       for (Titan titan : TempArray) {
-        System.out.println("****************");
+        System.out.println("***************");
         System.out.println("TITAN");
         System.out.println("Nombre: "+titan.Name);
         System.out.println("Id: "+titan.Id);
-        System.out.println("****************");
+        System.out.println("***************");
 
       }
     } else {

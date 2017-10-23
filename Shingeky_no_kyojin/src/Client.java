@@ -60,7 +60,7 @@ public class Client {
             String puertodistrito = Di.readUTF();
 
             //System.out.println("El nombre es: " + name+", la ip multicast es: "+ipmulti+", el puerto multicast es: "+puertomulti+", la ip del distrito es: "+ipdistrito+" y el puerto del distrito es: "+ puertodistrito);
-            conectarMulticast(name, ipmulti, puertomulti);
+            conectarMulticast(mySocket, name, ipmulti, puertomulti, ipdistrito, puertodistrito);
             while(true) {
                 System.out.println("[Cliente: ] Introducir Nombre de distrito a Cambiar o escriba 'Salir' para terminar la conexion");
                 input = scanner.nextLine();
@@ -96,7 +96,7 @@ public class Client {
                     String ipdistrito2 = Di2.readUTF();
                     String puertodistrito2 = Di2.readUTF();
 
-                    conectarMulticast(name2, ipmulti2, puertomulti2);
+                    conectarMulticast(mySocket, name2, ipmulti2, puertomulti2, ipdistrito2, puertodistrito2);
 
 
                 }
@@ -115,15 +115,14 @@ public class Client {
     }
 
 
-    public static void conectarMulticast(String name, String ip, String port) {
+    public static void conectarMulticast(DatagramSocket s, String name, String ip, String port, String ip2, String puerto2) {
         try {
 
             InetAddress grupoM = InetAddress.getByName(ip);
             MulticastSocket socket = new MulticastSocket(Integer.parseInt(port));
-            //socket.joinGroup(grupoM);
 
-            new Thread(new McastReceiver(Integer.parseInt(port),grupoM),"McastReceiver").start();
-
+            McastReceiver th = new McastReceiver(Integer.parseInt(port),grupoM);
+            new Thread(th,"McastReceiver");
             System.out.println("[Cliente]: uniendose a distrito" + name);
             System.out.println("[Cliente]: Bienvenido a Atack On Distribuidos!!-Distrito: " + name);
 
@@ -140,8 +139,48 @@ public class Client {
 
 
                 if (Objects.equals("1", temp)) {
+                    ByteArrayOutputStream rec2 = new ByteArrayOutputStream(1000);
+                    DataOutput Do2 = new DataOutputStream(rec2);
+
+                    Do2.writeInt(1);
+
+                    DatagramPacket enviar = new DatagramPacket(rec2.toByteArray(), rec2.size(), InetAddress.getByName(ip2), Integer.parseInt(puerto2));
+                    s.send(enviar);
+
+                    byte[] bufferSal = new byte[1024];
+                    ByteArrayInputStream rec3 = new ByteArrayInputStream(bufferSal);
+                    DataInput Di3 = new DataInputStream(rec3);
+                    DatagramPacket data = new DatagramPacket(bufferSal, 1000);
+                    s.receive(data);
+
+                    int iterator = Di3.readInt();
+                    //Imprimir titanes
+                    if(iterator!= 0) {
+                        System.out.println("[Cliente:] Titanes en el Distrito: ");
+                        //IMPRIME TODOS LOS TITANES EN DATAGRAMA
+                        for (int i = 0; i < iterator; i++) {
+                            System.out.println("****************");
+                            System.out.println("Id: "+ Di3.readInt());
+                            System.out.println("Nombre: "+ Di3.readUTF());
+                            System.out.println("Distrito: "+ Di3.readUTF());
+                            System.out.println("Tipo: "+ Di3.readUTF());
+                            System.out.println("****************");
+                        }
+                    } else {
+                        System.out.println("[Cliente:] No hay titanes ");
+
+                    }
+
+
+
+
+
+
+
+
 
                 } else if (Objects.equals("2", temp)) {
+                    th.terminar();
                     break;
 
                 } else if (Objects.equals("3", temp)) {
@@ -205,4 +244,6 @@ public class Client {
         }
 
     }
+
+
 }
