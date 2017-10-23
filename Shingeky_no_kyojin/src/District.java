@@ -17,6 +17,7 @@ public class District {
   //
   ArrayList<Titan> Titanes;
   McastRepeater ActualizadorTitanes;
+  SDReceivers actualizadorTITANES;
 
   //Constructor de Distritos entregando cada dato
   public District(String Name, InetAddress IpMC, int PMC, InetAddress IpPeticiones, int PPeticiones){
@@ -111,32 +112,6 @@ public class District {
       }
 
 
-  }
-
-  //Capturar Titan
-  public void CaptureTitan(int TitanId){
-    //LLamar funcion que agrega a la lista de capturados local del cliente
-
-    //Quitar de la lista de titanes activos del distrito
-    Titan[] TempArray = (Titan[])Titanes.toArray(new Titan[0]);
-    for (Titan titan : TempArray) {
-      if (titan.Id == TitanId){
-        Titanes.remove(titan); //SI ESTO NO FUNCIONA CAMBIARLO POR FORI Y REMOVE POR INDICE
-      }
-    }
-  }
-
-  //Matar titan
-  public void KillTitan(int TitanId){
-    //LLamar funcion que agrega a la lista de asesinados local del cliente
-
-    //Quitar de la lista de titanes activos del distrito
-    Titan[] TempArray = (Titan[])Titanes.toArray(new Titan[0]);
-    for (Titan titan : TempArray) {
-      if (titan.Id == TitanId){
-        Titanes.remove(titan); //SI ESTO NO FUNCIONA CAMBIARLO POR FORI Y REMOVE POR INDICE
-      }
-    }
   }
 
   //Mostrar la lista de titanes

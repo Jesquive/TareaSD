@@ -2,6 +2,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
+
 public class SDReceivers implements Runnable {
 
     int petPort = 0;
@@ -20,7 +21,6 @@ public class SDReceivers implements Runnable {
     @Override
     public void run() {
         byte[] bufferEnt = new byte[1024];
-        byte[] bufferSal = new byte[1024];
         while(true){
             ByteArrayInputStream rec = new ByteArrayInputStream(bufferEnt);
             DataInput Di = new DataInputStream(rec);
@@ -52,6 +52,26 @@ public class SDReceivers implements Runnable {
                         mSocket.send(enviar);
                         break;
                     case 3:
+                        ByteArrayOutputStream pet3 = new ByteArrayOutputStream(1000);
+                        DataOutput Do3 = new DataOutputStream(pet3);
+                        String nombreTitan = Di.readUTF();
+                        if(this.TitanesS.size() != 0) {
+                            Titan[] TempArray = (Titan[]) this.TitanesS.toArray(new Titan[0]);
+                            for (Titan titan : TempArray) {
+                                if(titan.Name.equals(nombreTitan)){
+                                    Do3.writeInt(titan.Id);
+                                    Do3.writeUTF(titan.Name);
+                                    Do3.writeUTF(titan.District);
+                                    Do3.writeUTF(titan.Tipo);
+                                    CaptureTitan(titan.Id);
+
+                                    break;
+                                }
+
+                            }
+                        }
+                        DatagramPacket enviar3 = new DatagramPacket(pet3.toByteArray(), pet3.size(), data.getAddress(), data.getPort());
+                        mSocket.send(enviar3);
 
                         break;
                     case 4:
@@ -69,6 +89,30 @@ public class SDReceivers implements Runnable {
     }
     public void terminar(){
         this.cerrarThread = false;
+    }
+    //Capturar Titan
+    public void CaptureTitan(int TitanId){
+        //LLamar funcion que agrega a la lista de capturados local del cliente
+
+        //Quitar de la lista de titanes activos del distrito
+        Titan[] TempArray = (Titan[])TitanesS.toArray(new Titan[0]);
+        for (Titan titan : TempArray) {
+            if (titan.Id == TitanId){
+                TitanesS.remove(titan); //SI ESTO NO FUNCIONA CAMBIARLO POR FORI Y REMOVE POR INDICE
+            }
+        }
+    }
+    //Matar titan
+    public void KillTitan(int TitanId){
+        //LLamar funcion que agrega a la lista de asesinados local del cliente
+
+        //Quitar de la lista de titanes activos del distrito
+        Titan[] TempArray = (Titan[])TitanesS.toArray(new Titan[0]);
+        for (Titan titan : TempArray) {
+            if (titan.Id == TitanId){
+                TitanesS.remove(titan); //SI ESTO NO FUNCIONA CAMBIARLO POR FORI Y REMOVE POR INDICE
+            }
+        }
     }
 
 
