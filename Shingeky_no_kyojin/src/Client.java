@@ -294,7 +294,7 @@ public class Client {
     }
     public static void TitanLocalAS(int Id,String Name,String distrito, String Tipo) {
         Titan Titan = new Titan(Id, Name, distrito, Tipo);
-        TitanesCap.add(Titan);
+        TitanesAse.add(Titan);
     }
 
 }
