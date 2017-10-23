@@ -53,7 +53,7 @@ public class District {
   public void PetitionServer(){
       try {
           DatagramSocket mySocket = new DatagramSocket(this.PPeticiones);
-          SDReceivers th = new SDReceivers(mySocket);
+          SDReceivers th = new SDReceivers(mySocket, Titanes);
           new Thread(th,"SDReceiver: Distrito "+this.Name).start();
       }catch (Exception ex) {
           ex.printStackTrace( );

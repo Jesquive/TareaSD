@@ -10,8 +10,10 @@ public class SDReceivers implements Runnable {
     Boolean cerrarThread = true;
     ArrayList<Titan> TitanesS;
     //Asigna las variables necesarias para el MC
-    public SDReceivers(DatagramSocket s) {
+    public SDReceivers(DatagramSocket s, ArrayList<Titan> titanes) {
+
         this.mSocket = s;
+        this.TitanesS = titanes;
     }
 
 

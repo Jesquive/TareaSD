@@ -167,7 +167,11 @@ public class Client {
                             System.out.println("****************");
                         }
                     } else {
-                        System.out.println("[Cliente:] No hay titanes ");
+                        System.out.println("*************************" +
+                                           "*************************" +
+                                           "[Cliente:] No hay titanes" +
+                                           "*************************" +
+                                           "*************************");
 
                     }
 
