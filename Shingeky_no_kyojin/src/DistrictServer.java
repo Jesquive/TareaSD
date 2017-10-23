@@ -100,7 +100,7 @@ public class DistrictServer {
 
       //Por ahora no hacen nada
       Distrito.CreateMulticast();
-      Distrito.PetitionServer();
+
       //////////////////////////
 
       Distritos.add(Distrito);

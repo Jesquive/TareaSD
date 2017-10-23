@@ -46,7 +46,7 @@ public class District {
 
       //Crear thread que enviara actualizaciones cada 1 minuto de los titanes del distrito
       new Thread(this.ActualizadorTitanes,"McastRepeater: Distrito"+this.Name).start();
-
+      PetitionServer();
   }
 
   //Crear Servidor de peticiones para este distrito
@@ -54,7 +54,7 @@ public class District {
       try {
           DatagramSocket mySocket = new DatagramSocket(this.PPeticiones);
           SDReceivers th = new SDReceivers(mySocket);
-          new Thread(th,"SDReceiver: Distrito "+this.Name);
+          new Thread(th,"SDReceiver: Distrito "+this.Name).start();
       }catch (Exception ex) {
           ex.printStackTrace( );
       }

@@ -122,7 +122,7 @@ public class Client {
             MulticastSocket socket = new MulticastSocket(Integer.parseInt(port));
 
             McastReceiver th = new McastReceiver(Integer.parseInt(port),grupoM);
-            new Thread(th,"McastReceiver");
+            new Thread(th,"McastReceiver").start();
             System.out.println("[Cliente]: uniendose a distrito" + name);
             System.out.println("[Cliente]: Bienvenido a Atack On Distribuidos!!-Distrito: " + name);
 
@@ -170,11 +170,6 @@ public class Client {
                         System.out.println("[Cliente:] No hay titanes ");
 
                     }
-
-
-
-
-
 
 
 

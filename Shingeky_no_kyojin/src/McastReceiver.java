@@ -107,7 +107,7 @@ public class McastReceiver implements Runnable {
 
                 //ois.close();
                 bistream.close();
-                mSocket.close();
+
 
 
 
@@ -120,6 +120,7 @@ public class McastReceiver implements Runnable {
             }*/
 
         }
+        mSocket.close();
 
     }
     public void terminar(){
