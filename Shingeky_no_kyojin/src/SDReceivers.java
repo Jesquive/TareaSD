@@ -75,6 +75,27 @@ public class SDReceivers implements Runnable {
 
                         break;
                     case 4:
+                        ByteArrayOutputStream pet4 = new ByteArrayOutputStream(1000);
+                        DataOutput Do4 = new DataOutputStream(pet4);
+                        String nombreTitan4 = Di.readUTF();
+                        if(this.TitanesS.size() != 0) {
+                            Titan[] TempArray = (Titan[]) this.TitanesS.toArray(new Titan[0]);
+                            for (Titan titan : TempArray) {
+                                if(titan.Name.equals(nombreTitan4)){
+                                    Do4.writeInt(titan.Id);
+                                    Do4.writeUTF(titan.Name);
+                                    Do4.writeUTF(titan.District);
+                                    Do4.writeUTF(titan.Tipo);
+                                    KillTitan(titan.Id);
+
+                                    break;
+                                }
+
+                            }
+                        }
+                        DatagramPacket enviar4 = new DatagramPacket(pet4.toByteArray(), pet4.size(), data.getAddress(), data.getPort());
+                        mSocket.send(enviar4);
+
 
                         break;
                 }

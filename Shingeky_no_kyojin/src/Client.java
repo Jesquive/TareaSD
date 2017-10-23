@@ -206,6 +206,30 @@ public class Client {
 
 
                 } else if (Objects.equals("4", temp)) {
+                    ByteArrayOutputStream pet4 = new ByteArrayOutputStream(1000);
+                    DataOutput Do5 = new DataOutputStream(pet4);
+
+                    System.out.println("[Cliente: ] ¿Que titan desea matar?(Escriba el nombre");
+                    String titan4 = scanner.nextLine();
+
+                    Do5.writeInt(4);
+                    Do5.writeUTF(titan4);
+
+                    DatagramPacket peticion4 = new DatagramPacket(pet4.toByteArray(), pet4.size(), InetAddress.getByName(ip2), Integer.parseInt(puerto2));
+                    s.send(peticion4);
+
+                    byte[] bufferSal4 = new byte[1024];
+                    ByteArrayInputStream reci4 = new ByteArrayInputStream(bufferSal4);
+                    DataInput Di4 = new DataInputStream(reci4);
+                    DatagramPacket data4 = new DatagramPacket(bufferSal4, 1000);
+
+                    s.receive(data4);
+
+                    int id = Di4.readInt();
+                    String nombre = Di4.readUTF();
+                    String distrito = Di4.readUTF();
+                    String tipo = Di4.readUTF();
+                    TitanLocalAS(id, nombre, distrito, tipo);
 
                 } else if (Objects.equals("5", temp)) {
                     ListarTitanCap();
@@ -265,6 +289,10 @@ public class Client {
 
     }
     public static void TitanLocalCap(int Id,String Name,String distrito, String Tipo) {
+        Titan Titan = new Titan(Id, Name, distrito, Tipo);
+        TitanesCap.add(Titan);
+    }
+    public static void TitanLocalAS(int Id,String Name,String distrito, String Tipo) {
         Titan Titan = new Titan(Id, Name, distrito, Tipo);
         TitanesCap.add(Titan);
     }
