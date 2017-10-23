@@ -54,7 +54,7 @@ public class District {
       try {
           DatagramSocket mySocket = new DatagramSocket(this.PPeticiones);
           SDReceivers th = new SDReceivers(mySocket);
-          new Thread(th,"SDReceiver");
+          new Thread(th,"SDReceiver: Distrito "+this.Name);
       }catch (Exception ex) {
           ex.printStackTrace( );
       }

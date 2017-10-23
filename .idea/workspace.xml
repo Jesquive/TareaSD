@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="971b8cb2-bf73-427a-a18a-3404650044e6" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Shingeky_no_kyojin/src/Client.java" afterPath="$PROJECT_DIR$/Shingeky_no_kyojin/src/Client.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Shingeky_no_kyojin/src/District.java" afterPath="$PROJECT_DIR$/Shingeky_no_kyojin/src/District.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Shingeky_no_kyojin/src/McastReceiver.java" afterPath="$PROJECT_DIR$/Shingeky_no_kyojin/src/McastReceiver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Shingeky_no_kyojin/src/McastRepeater.java" afterPath="$PROJECT_DIR$/Shingeky_no_kyojin/src/McastRepeater.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -55,7 +51,7 @@
         <entry file="file://$PROJECT_DIR$/Shingeky_no_kyojin/src/District.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="371">
-              <caret line="56" column="38" lean-forward="false" selection-start-line="56" selection-start-column="38" selection-end-line="56" selection-end-column="38" />
+              <caret line="56" column="48" lean-forward="false" selection-start-line="56" selection-start-column="48" selection-end-line="56" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -109,11 +105,11 @@
         <option value="$PROJECT_DIR$/Shingeky_no_kyojin/out/production/Atack on Distribuidas/CentralServer.class" />
         <option value="$PROJECT_DIR$/Shingeky_no_kyojin/src/DistrictServer.java" />
         <option value="$PROJECT_DIR$/Shingeky_no_kyojin/src/McastReceiver.java" />
-        <option value="$PROJECT_DIR$/Shingeky_no_kyojin/src/District.java" />
         <option value="$PROJECT_DIR$/Shingeky_no_kyojin/src/SDReceiver.java" />
         <option value="$PROJECT_DIR$/Shingeky_no_kyojin/src/McastRepeater.java" />
         <option value="$PROJECT_DIR$/Shingeky_no_kyojin/src/SDReceivers.java" />
         <option value="$PROJECT_DIR$/Shingeky_no_kyojin/src/Client.java" />
+        <option value="$PROJECT_DIR$/Shingeky_no_kyojin/src/District.java" />
       </list>
     </option>
   </component>
@@ -359,12 +355,12 @@
       <option name="presentableId" value="Default" />
       <updated>1508350040128</updated>
       <workItem from="1508598511253" duration="14590000" />
-      <workItem from="1508764084230" duration="9187000" />
+      <workItem from="1508764084230" duration="9448000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23777000" />
+    <option name="totallyTimeSpent" value="24038000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="47" width="1366" height="741" extended-state="6" />
@@ -606,7 +602,7 @@
     <entry file="file://$PROJECT_DIR$/Shingeky_no_kyojin/src/District.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="371">
-          <caret line="56" column="38" lean-forward="false" selection-start-line="56" selection-start-column="38" selection-end-line="56" selection-end-column="38" />
+          <caret line="56" column="48" lean-forward="false" selection-start-line="56" selection-start-column="48" selection-end-line="56" selection-end-column="48" />
           <folding />
         </state>
       </provider>
