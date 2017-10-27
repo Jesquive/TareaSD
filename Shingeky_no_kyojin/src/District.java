@@ -65,6 +65,7 @@ public class District {
 
   //Crear titan en este distrito y agregarlo a la lista de titanes vivos
   public void NewTitan(int IdLastCreatedTitan,String Name,String Tipo){
+
     Titan Titan = new Titan(IdLastCreatedTitan,Name,this.Name,Tipo);
     Titanes.add(Titan);
     ActualizadorTitanes.SetTitanList(this.Titanes);
@@ -76,11 +77,10 @@ public class District {
     System.out.println("Distrito: "+ this.Name);
     System.out.println("**************** \n");
 
-
-    //FUNCION en prueba
     SendMCNewTitan(IdLastCreatedTitan,Name,Tipo);
   }
-    //REVISAR SI EL TEMPSOCK ENVIA
+
+    //Envia el nuevo titan al multicast
   public void SendMCNewTitan(int id,String TitanName,String TitanType){
 
       try {
@@ -114,7 +114,7 @@ public class District {
 
   }
 
-  //Mostrar la lista de titanes
+  //Mostrar la lista de titanes(en el districtserver)
   public void ShowTitans(){
 
     //Imprimir titanes

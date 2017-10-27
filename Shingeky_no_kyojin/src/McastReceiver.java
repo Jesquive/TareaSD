@@ -27,50 +27,44 @@ public class McastReceiver implements Runnable {
     public void run() {
         MulticastSocket mSocket = null;
 
-        //INSTANCIAR EL RECIBIDOR MULTICAST
+        //Instancia el multicast
         try {
 
-            System.out.println("Setting up multicast receiver");
+            //System.out.println("Setting up multicast receiver");
             mSocket = new MulticastSocket(this.mcastPort);
             System.out.println(this.mcastAddr);
             mSocket.joinGroup(this.mcastAddr);
 
         } catch(IOException ioe) {
-            System.out.println("Trouble opening multicast port");
+            System.out.println("[Cliente: ] Trouble opening multicast port");
             ioe.printStackTrace();      System.exit(1);
 
         }
 
         DatagramPacket packet;
-        System.out.println("Multicast receiver set up ");
+        System.out.println("[Cliente: ] Conectado al Distrito");
 
         //Esperar a que llegue algo
         while (cerrarThread) {
             try {
-                //ArrayList<Titan> Titanes= new ArrayList<Titan>();
-                //Crear Datagrama UDP
                 byte[] buf = new byte[1000];
                 packet = new DatagramPacket(buf,buf.length);
                 //System.out.println("McastReceiver: waiting for packet");
-
-                //Recibir paquete
                 mSocket.receive(packet);
 
-                //Crear el inputstream con los datos de llegada
-                ByteArrayInputStream bistream =
-                        new ByteArrayInputStream(packet.getData());
+                ByteArrayInputStream bistream = new ByteArrayInputStream(packet.getData());
                 DataInput Di = new DataInputStream(bistream);
 
                 //Primer input me dice cuantos titanes a listar
                 int iterator = Di.readInt();
 
-                //SI RECIBE -300, SIGNIFICA QUE ES UN DATAGRAMA SOLO CON 1 TITAN QUE ES NUEVO,
-                //POR LO QUE VUELVO EL ITERADOR A 1 PARA QUE LO IMPRIMA Y AGREGO MENSAJE DE NUEVO
+                //SI RECIBE -300, es un datagrama de que posee solo un titan y es uno nuevo.
+                //Se imprime mensaje indicando su estado y se devuelve el iterador a 1 para imprimirlo
                 if(iterator == -300) {
-                    System.out.println("\nNUEVO TITAN");
+                    System.out.println("\n[Cliente: ] NUEVO TITAN ATACA");
                     iterator = 1;
                 } else if (iterator == 0){
-                    System.out.println("No hay titanes en el Distrito");
+                    System.out.println("[Cliente: ] No hay titanes en el Distrito");
                 }
 
                 //IMPRIME TODOS LOS TITANES EN DATAGRAMA
@@ -82,47 +76,21 @@ public class McastReceiver implements Runnable {
                     System.out.println("Tipo: "+Di.readUTF());
                     System.out.println("****************");
                 }
-                //El programa solo recibia 1
-                /*ObjectInputStream ois = new ObjectInputStream(bistream);
-                Titanes = (ArrayList<Titan>) ois.readObject();
-
-                //Ignorar paquetes que salgan de mi
-                if (!(packet.getAddress().equals(this.localHost))) {
-                    if(Titanes.size() != 0) {
-                        System.out.println("[Cliente:] Titanes del Distrito");
-                        Titan[] TempArray = (Titan[]) Titanes.toArray(new Titan[0]);
-                        for (Titan titan : TempArray) {
-                            System.out.println("****************");
-                            System.out.println("TITAN");
-                            System.out.println("Nombre: "+titan.Name);
-                            System.out.println("Id: "+titan.Id);
-                            System.out.println("****************");
-
-                        }
-                    } else {
-                        System.out.println("[Cliente:] No hay titanes ");
-
-                    }*/
-
-
-                //ois.close();
                 bistream.close();
 
 
 
 
             } catch(IOException ioe) {
-                System.out.println("Trouble reading multicast message");
+                System.out.println("[Cliente: ] 9Trouble reading multicast message");
                 ioe.printStackTrace();  System.exit(1);
-            } /*catch (ClassNotFoundException cnfe) {
-                System.out.println("Class missing while reading mcast packet");
-                cnfe.printStackTrace(); System.exit(1);
-            }*/
+            }
 
         }
         mSocket.close();
 
     }
+    //Funcion que cierra el thread
     public void terminar(){
         this.cerrarThread = false;
     }

@@ -1,5 +1,5 @@
 public class Titan {
-
+//Datos del titan y constructo.
   public int Id;
   String Name;
   String District;

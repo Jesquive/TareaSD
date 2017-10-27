@@ -1,0 +1,88 @@
+ATTACK ON DISTRIBUIDAS
+
+************************************************************************************************************************
+************************************************************************************************************************
+Consideracions para correr el programa:
+
+Se posee el archivo makefile(usar comando make) que compila las 3 clases principales (Client.java, DistrictServer.java,
+CentralServer.java), y al compilar estas, se compilan todas las demas. Tambien posee un clean (comando make clean)
+si es necesario.
+
+Se pide que los inputs sean correctos para mostrar el correcto funcionamiento del programa.
+
+Maquinas del Grupo-09
+    10.10.2.135
+    10.10.2.203
+    10.10.2.107
+
+El Client y DistrictServer se pueden corrar tanto en .135 como en .203 pero el CentralServer se corre obligatoriamente
+en la .107 para que funcione correctamente.
+
+Puertos en uso son:
+10.10.2.107 / 5004 --> Puerto donde se reciben las peticiones de conexion del Client.
+10.10.2.107 / 5005 --> Puerto donde se reciben las actualizaciones de distrito del DistrictServer.
+
+Se abre una instancia de cada una de las 3 clases principales en una maquina respectivamente, se crean uno o mas
+distritos a traves de DistrictServer, el cliente intenta conectarse a uno, el ServidoCentral acepta, el cliente
+puede hacer sus cosas y el DistrictServer puede accedar a sus distritos y crear titanes.
+La ip del server de peticiones que se usa es la de la maquina que corre el DistrictServer.
+
+
+Se probo usando estos datos para los distritos:
+Nombre: Frost
+Multicast:
+224.0.0.7
+5400
+Peticiones:
+10.10.2.135 (Varia, depende donde corre DistrictServer)
+5002
+
+Nombre: Hot
+Multicast:
+224.0.0.8
+5401
+
+Peticiones:
+10.10.2.135 (Varia, depende donde corre DistrictServer)
+5050
+
+************************************************************************************************************************
+************************************************************************************************************************
+Resumen:
+
+Clases principales:
+
+    -Client: posee las funciones del cliente, se intenta conectar al CentralServer(CS) y pregunta si se puede ir a x distrito.
+     Si es aceptado por el CS, le aparece el menu con sus opciones, puede listar los titanes del distrito, cambiarse
+     a otro distrito, capturar o asesinar titan y listar los titanes capturados o asesinados, estas funciones se
+     llaman ingresando numeros del 1 al 6. Cada 1 minuto le llega una actualizacion del distrito sobre los titanes
+     en el, ademas de los titanes nuevos que aparecen.
+
+    -CentralServer: Acepta o rechaza conexiones de usuarios, cada vez que entra un usuario se listan los usuarios
+    conectados en x distrito. Cada vez que crea un distrito en DistrictServer(DS) este le envia un mensaje a CS para
+    que actualize su informacion de los distritos creados (se hace automaticamente).
+
+    -DistrictServer: Posee un menu para poder crear distritos con los datos de su multicast y servidor de peticiones
+    que los maneja con threads. Puede listar los distritos creados y puede acceder a ellos para poder crear titanes.
+    Puede listar titanes. Al crear un titan manda aviso y cada 1 minuto le avisa a los clientes conectados sobre
+    los titanes del distrito. Posee id global de titanes.
+
+Clases Auxiliares:
+
+    -CSreceiver: clase que posee el thread en donde el CS recibe las actualizaciones de los nuevos distritos
+    creados.
+
+    -McastRepeater: clase que posee el thread que actualiza a todos los clientes de un distrito cada 1 minuto
+    sobre los titanes que existen en el.
+
+    -McastReceiver: clase que posee el thread que le permite al cliente recibir tanto los nuevos titanes creados
+    en DS como la lista de titanes de McastRepeater.
+
+    -SDReceivers: clase que posee el thread encargado del servidor de peticiones de cada distrito. Recibe 3 tipos
+    de peticiones, una es listar titanes del distrito, captura titan o matar titan.
+
+    -Titan: tipo de dato que posee los datos de los titanes y su constructor.
+
+    -District: objeto creado cada vez que se crea un distrito en DS, guarda los datos de un distrito y tiene las funciones
+    para crear el multicast (y el McastRepeater), levantar el servidor de peticiones (SDReceivers), crear nuevo titan
+     ,enviar al multicast este titan y mostrar al DS los titanes de este distrito.

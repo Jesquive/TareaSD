@@ -11,7 +11,7 @@ public class McastRepeater implements Runnable {
     ArrayList<Titan> TitanesS;
 
 
-
+    //Constructor
     public McastRepeater (int port, InetAddress addr, ArrayList<Titan> Titanes) {
 
         this.mcastPort = port;
@@ -21,7 +21,7 @@ public class McastRepeater implements Runnable {
             this.dgramSocket = new DatagramSocket();
 
         } catch (IOException ioe) {
-            System.out.println("problems creating the datagram socket.");
+            System.out.println("[Distrito: ] problems creating the datagram socket.");
             ioe.printStackTrace();
             System.exit(1);
         }
@@ -30,32 +30,31 @@ public class McastRepeater implements Runnable {
             this.localHost = InetAddress.getLocalHost();
 
         } catch (UnknownHostException uhe) {
-            System.out.println("Problems identifying local host");
+            System.out.println("[Distrito: ] Problems identifying local host");
             uhe.printStackTrace();
             System.exit(1);
         }
     }
 
+    //Mantiene la lista actualizada
     public void SetTitanList(ArrayList<Titan> Titanes){
         this.TitanesS = Titanes;
     }
 
+    //Devuelve el socket del multicas para uso en otras clases
     public DatagramSocket GetMCsocket(){
         return dgramSocket;
     }
 
     @Override
     public void run() {
-        // send multicast msg once per second
+        //Paquete a enviar
         DatagramPacket packet = null;
-        int count = 0;
 
         while (true) {
-            // careate the packet to sned.
-
+            //Se hace cada 60 segundos
             try {
 
-                // serialize the multicast message
                 ByteArrayOutputStream baot = new ByteArrayOutputStream();
                 DataOutput Do = new DataOutputStream(baot);
 
@@ -63,6 +62,7 @@ public class McastRepeater implements Runnable {
                 int iterator = this.TitanesS.size();
                 Do.writeInt(iterator);
 
+                //Serializa la cantidad de titanes
                 if(this.TitanesS.size() != 0) {
                     Titan[] TempArray = (Titan[]) this.TitanesS.toArray(new Titan[0]);
                     for (Titan titan : TempArray) {
@@ -73,22 +73,21 @@ public class McastRepeater implements Runnable {
                     }
                 }
 
-                // Create a datagram packet and send it
                 packet = new DatagramPacket(baot.toByteArray(),
                         baot.size(),
                         mcastAddr,
                         mcastPort);
 
-                // send the packet
+                // Envia el paquete
                 dgramSocket.send(packet);
-                System.out.println("sending multicast message");
+               // System.out.println("[Distrito: ] Enviando Actualizacion de titanes");
                 Thread.sleep(60000);
 
             } catch(InterruptedException ie) {
                 ie.printStackTrace();
 
             } catch (IOException ioe) {
-                System.out.println("error sending multicast");
+                System.out.println("[Distrito: ] error sending multicast");
                 ioe.printStackTrace(); System.exit(1);
 
             }

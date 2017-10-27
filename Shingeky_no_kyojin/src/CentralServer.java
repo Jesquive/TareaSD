@@ -3,39 +3,35 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 public class CentralServer {
-
-    //Arreglos que con tendran los servers
-    //y los clientes actuales
-    List serversNames;
-    List currentClients;
+    //Variables con el registro de los distritos y para recibir el input.
+    public static List<List<String>> Distritos = new ArrayList<List<String>>();
     private static Scanner scanner;
+
     public static void main(String[] args) {
             CentralServerGet();
     }
     public static void CentralServerGet(){
         List<List<String>> Conectados = new ArrayList<List<String>>();
-        List<List<String>> Distritos = new ArrayList<List<String>>();
-
-
         try {
+            //Se crea el actualizador automatico de distritos
+            CSreceiver ActualizadorDistritos = new CSreceiver(new DatagramSocket(5005), Distritos);
+            new Thread(ActualizadorDistritos,"CSreceiver").start();
 
-            //Llegada de paquete udp con la info de conexion
-
-            Distritos.add(new ArrayList<String>());
-            Distritos.get(Distritos.size()-1).add("Frost");
-            Distritos.get(Distritos.size()-1).add("224.0.0.7");
-            Distritos.get(Distritos.size()-1).add("5400");
-            Distritos.get(Distritos.size()-1).add("10.10.2.135");
-            Distritos.get(Distritos.size()-1).add("5002");
-            Distritos.add(new ArrayList<String>());
-            Distritos.get(Distritos.size()-1).add("Hot");
-            Distritos.get(Distritos.size()-1).add("224.0.0.8");
-            Distritos.get(Distritos.size()-1).add("5401");
-            Distritos.get(Distritos.size()-1).add("10.10.2.135");
-            Distritos.get(Distritos.size()-1).add("5700");
+            //Llegada de paquete udp con la info de conexion de un cliente
             while(true) {
-                for(int i = 0; i<Conectados.size();i++){
-                    System.out.println("IP: "+ Conectados.get(i).get(0)+" en distrito: "+ Conectados.get(i).get(1));
+
+                //Imprime los clientes conectados a x distrito y todos los conectados a ese distrito.
+                if (Conectados.size() != 0){
+                    System.out.println("[Servidor Central: ] Los conectados son: ");
+                    for(int i = 0; i<Conectados.size();i++){
+                        System.out.println("IP: "+ Conectados.get(i).get(0)+" en distrito: "+ Conectados.get(i).get(1));
+                    }
+                } else {
+                    System.out.println("[Servidor Central: ] No hay usuarios conectados");
+                }
+                System.out.println("[Servidor Central: ] Los Servidores son: ");
+                for(int i = 0; i<Distritos.size();i++){
+                    System.out.println("Nombre: "+ Distritos.get(i).get(0));
                 }
 
                 DatagramSocket mySocket = new DatagramSocket(5004);
@@ -49,10 +45,13 @@ public class CentralServer {
 
                 String message = Di.readUTF();
 
-                System.out.println("[Servidor Central] Dar autorizacion a " +
+                //Acepta o rechaza la conexion del cliente
+                System.out.println("[Servidor Central: ] Dar autorizacion a " +
                         datagram.getAddress() + " para el Distrito " + message
                         + "\n 1.-SI \n 2.-NO ");
                 String input = scanner.nextLine();
+
+
                 //Si es aceptado, entregarle los datos del multicast y el ip-consultas
                 if ("1".equals(input)) {
                     Conectados.add(new ArrayList<String>());
@@ -72,12 +71,12 @@ public class CentralServer {
                             DatagramPacket respuesta = new DatagramPacket(baot.toByteArray(), baot.size(), datagram.getAddress(), datagram.getPort());
                             // Enviamos la respuesta, que es un eco
                             mySocket.send(respuesta);
-
-
                         }
                     }
 
-                }else{
+                }
+                //Si es rechazado, le envia el mensaje correspondiente
+                else{
                     ByteArrayOutputStream baot = new ByteArrayOutputStream(1000);
                     DataOutput Do = new DataOutputStream(baot);
                     Do.writeUTF("Rechazado");
@@ -94,10 +93,4 @@ public class CentralServer {
             ex.printStackTrace();
         }
     }
-
-    //Envia Informacion de conexion a un cliente
-    public static void InformationSender(String Server,String ipMC, int PuertoMC,String ipPET,int PuertoPET){
-
-    }
-
 }

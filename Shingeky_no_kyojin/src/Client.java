@@ -3,6 +3,8 @@ import java.net.*;
 import java.util.*;
 
 public class Client {
+    //Variables para recibir input y listas locales de titanes
+    //capturados o asesinados
     private static Scanner scanner;
     static ArrayList<Titan> TitanesCap = new ArrayList<Titan>();
     static ArrayList<Titan> TitanesAse = new ArrayList<Titan>();
@@ -13,6 +15,9 @@ public class Client {
 
     }
 
+    //Recibe el input para conectarse al servidor central, envia consulta
+    //Si es aceptado, recibe los datos del distrito en cuestion, si se quiere
+    //cambiar de distrito o salirse del programa se le da la opcion.
     public static void ConnectionRequest() {
         try {
             ByteArrayOutputStream baot = new ByteArrayOutputStream(10);
@@ -21,7 +26,7 @@ public class Client {
             scanner = new Scanner(System.in);
 
             //Recibir IP, puerto y Nombre de distrito a entrar
-            System.out.println("[Cliente] Ingresar IP del Servidor Central");
+            System.out.println("[Cliente: ] Ingresar IP del Servidor Central");
             String input = scanner.nextLine();
             InetAddress receiverHost = InetAddress.getByName(input);
 
@@ -41,7 +46,6 @@ public class Client {
 
             ///Espero respuesta del ServerCentral
             // Construimos el DatagramPacket que contendrá la respuesta
-
             byte[] buffer2 = new byte[1000];
             ByteArrayInputStream bais = new ByteArrayInputStream(buffer2);
             DataInput Di = new DataInputStream(bais);
@@ -59,8 +63,9 @@ public class Client {
             String ipdistrito = Di.readUTF();
             String puertodistrito = Di.readUTF();
 
-            //System.out.println("El nombre es: " + name+", la ip multicast es: "+ipmulti+", el puerto multicast es: "+puertomulti+", la ip del distrito es: "+ipdistrito+" y el puerto del distrito es: "+ puertodistrito);
             conectarMulticast(mySocket, name, ipmulti, puertomulti, ipdistrito, puertodistrito);
+
+            //Si se quiere cambiar de distrito entra en este while
             while(true) {
                 System.out.println("[Cliente: ] Introducir Nombre de distrito a Cambiar o escriba 'Salir' para terminar la conexion");
                 input = scanner.nextLine();
@@ -102,19 +107,15 @@ public class Client {
                 }
 
             }
-
-
-
-
             mySocket.close();
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-
+    //Se conecta al multicast con los datos obtenidos, queda como un menu para recibir inputs del cliente donde
+    //envia peticiones al distrito (1,3,4) , listar los titanes que estan en esta clase (5,6) o cambiar de distrito (2)
     public static void conectarMulticast(DatagramSocket s, String name, String ip, String port, String ip2, String puerto2) {
         try {
 
@@ -123,7 +124,6 @@ public class Client {
 
             McastReceiver th = new McastReceiver(Integer.parseInt(port),grupoM);
             new Thread(th,"McastReceiver").start();
-            System.out.println("[Cliente]: uniendose a distrito" + name);
             System.out.println("[Cliente]: Bienvenido a Atack On Distribuidos!!-Distrito: " + name);
 
             while (true) {
@@ -137,7 +137,8 @@ public class Client {
                 System.out.println("[Cliente: ] (6) Listar Titanes Asesinados");
                 String temp = scanner.nextLine();
 
-
+                //Envia consulta y espera la respuesta, el primer elemento
+                //de la respuesta es un entero que indica cuantos titanes se tendra que imprimir
                 if (Objects.equals("1", temp)) {
                     ByteArrayOutputStream rec2 = new ByteArrayOutputStream(1000);
                     DataOutput Do2 = new DataOutputStream(rec2);
@@ -174,11 +175,18 @@ public class Client {
                                            "*************************");
                     }
 
-                } else if (Objects.equals("2", temp)) {
+                }
+                //Cierra el thread del multicast y vuelve a la funcion anterior para ver si
+                //se conecta a otro distrito o se desconecta
+                else if (Objects.equals("2", temp)) {
                     th.terminar();
                     break;
 
-                } else if (Objects.equals("3", temp)) {
+                }
+                //Tanto 3 y 4, reciben el nombre de un titan en el distrito y lo matan/capturan
+                //intentar no crear titanes con el mismo nombre, luego recibe la data entera del titan
+                //y lo guarda en su respectiva lista local.
+                else if (Objects.equals("3", temp)) {
                     ByteArrayOutputStream pet = new ByteArrayOutputStream(1000);
                     DataOutput Do4 = new DataOutputStream(pet);
 
@@ -231,14 +239,15 @@ public class Client {
                     String tipo = Di4.readUTF();
                     TitanLocalAS(id, nombre, distrito, tipo);
 
-                } else if (Objects.equals("5", temp)) {
+                }
+                //Tanto 5 y 6 solo imprimen lo que hay en sus listas
+                else if (Objects.equals("5", temp)) {
                     ListarTitanCap();
                 } else if (Objects.equals("6", temp)) {
                     ListarTitanAS();
                 }
 
             }
-           //socket.leaveGroup(grupoM);
 
 
         } catch (SocketException e) {
@@ -249,8 +258,9 @@ public class Client {
 
     }
 
+    //Imprimir titanes capturados
     public static void ListarTitanCap() {
-        //Imprimir titanes
+
         if(TitanesCap.size() != 0) {
             System.out.println("[Cliente:] Titanes Capturados");
             Titan[] TempArray = (Titan[]) TitanesCap.toArray(new Titan[0]);
@@ -269,8 +279,8 @@ public class Client {
 
     }
 
+    //Imprimir titanes asesinados
     public static void ListarTitanAS() {
-        //Imprimir titanes
         if(TitanesAse.size() != 0) {
             System.out.println("[Cliente:] Titanes Capturados");
             Titan[] TempArray = (Titan[]) TitanesAse.toArray(new Titan[0]);
@@ -288,10 +298,14 @@ public class Client {
         }
 
     }
+
+    //Agregar a la lista local de capturados.
     public static void TitanLocalCap(int Id,String Name,String distrito, String Tipo) {
         Titan Titan = new Titan(Id, Name, distrito, Tipo);
         TitanesCap.add(Titan);
     }
+
+    //Agregar a la lista local de asesinados.
     public static void TitanLocalAS(int Id,String Name,String distrito, String Tipo) {
         Titan Titan = new Titan(Id, Name, distrito, Tipo);
         TitanesAse.add(Titan);
