@@ -29,9 +29,14 @@ public class CentralServer {
                 } else {
                     System.out.println("[Servidor Central: ] No hay usuarios conectados");
                 }
-                System.out.println("[Servidor Central: ] Los Servidores son: ");
-                for(int i = 0; i<Distritos.size();i++){
-                    System.out.println("Nombre: "+ Distritos.get(i).get(0));
+                if(Distritos.size() != 0) {
+                    System.out.println("[Servidor Central: ] Los Distritos son: ");
+                    for (int i = 0; i < Distritos.size(); i++) {
+                        System.out.println("--> " + Distritos.get(i).get(0));
+                    }
+                } else {
+                    System.out.println("[Servidor Central: ] No hay distritos activos");
+
                 }
 
                 DatagramSocket mySocket = new DatagramSocket(5004);
